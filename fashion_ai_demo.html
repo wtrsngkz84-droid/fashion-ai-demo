@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>AI穿搭助手 · Demo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== Phone Shell ===== -->
+<div class="phone-shell">
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span class="time">9:41</span>
+    <span class="location">📍 未设置</span>
+    <span class="weather">☀️ 26°C</span>
+    <span class="date">6月25日 周三</span>
+  </div>
+
+  <!-- Pages -->
+  <div class="page-container">
+    <!-- Home / Chat -->
+    <div class="page active" id="page-home">
+      <div class="chat-container">
+        <div class="home-dashboard" id="home-dashboard">
+          <!-- Reminder Banner -->
+          <div class="reminder-banner" id="reminder-banner" style="display:none;">
+            <span class="reminder-banner-icon">🔔</span>
+            <span class="reminder-banner-text" id="reminder-banner-text"></span>
+            <button class="reminder-banner-close" id="reminder-banner-close">✕</button>
+          </div>
+          <!-- Compact info row -->
+          <div class="dash-row">
+            <span class="dash-location clickable" id="dash-location" title="点击切换城市">📍 未设置</span>
+            <span class="dash-weather" id="dash-weather">☀️ --°C</span>
+          </div>
+          <!-- Today status -->
+          <div class="today-status pending" id="today-status" style="display:none;">
+            <span class="today-status-icon">📋</span>
+            <span id="today-status-text">今日尚未搭配</span>
+          </div>
+          <!-- Plans section -->
+          <div class="plans-section" id="plans-section">
+            <div class="plans-header">
+              <span class="plans-title">📋 我的计划</span>
+              <button class="btn-add-plan-inline" id="btn-add-plan-home">＋ 添加</button>
+            </div>
+            <div class="plans-list" id="plans-list"></div>
+            <div class="plan-form-inline" id="plan-form-home" style="display:none;">
+              <input type="date" id="plan-date-home">
+              <div style="display:flex;gap:4px;">
+                <select id="plan-occasion-home" style="flex:1;">
+                  <option value="daily">日常通勤</option><option value="interview">面试</option>
+                  <option value="date">约会</option><option value="sports">运动</option>
+                  <option value="party">聚会</option><option value="business">商务宴请</option>
+                  <option value="custom">✏️ 自定义...</option>
+                </select>
+                <input type="text" id="plan-occasion-custom-home" placeholder="输入计划…" maxlength="20" style="flex:1;display:none;">
+              </div>
+              <input type="text" id="plan-dest-home" placeholder="📍 目的地（选填）" maxlength="20">
+              <input type="text" id="plan-notes-home" placeholder="备注（选填）" maxlength="30">
+              <div style="display:flex;gap:6px;">
+                <button class="btn-secondary" id="btn-plan-cancel-home" style="flex:1;font-size:0.72rem;">取消</button>
+                <button class="btn-primary" id="btn-plan-save-home" style="flex:1;font-size:0.72rem;">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input-wrap">
+          <div class="chat-input-box">
+            <button class="voice-btn" id="voice-btn" title="语音输入" style="display:none;">🎙️</button>
+            <input type="text" id="chat-input" placeholder="描述场景或需求..." maxlength="200">
+            <button class="send-btn" id="send-btn" title="发送">📤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wardrobe -->
+    <div class="page" id="page-wardrobe">
+      <div class="wardrobe-page" id="wardrobe-content"></div>
+    </div>
+
+    <!-- History -->
+    <div class="page" id="page-history">
+      <div class="history-page" id="history-content"></div>
+    </div>
+
+    <!-- Community -->
+    <div class="page" id="page-community">
+      <div class="community-page" id="community-content"></div>
+    </div>
+
+    <!-- Profile -->
+    <div class="page" id="page-profile">
+      <div class="profile-page" id="profile-content"></div>
+    </div>
+  </div>
+
+  <!-- FAB (Wardrobe page) -->
+  <button class="fab" id="fab-add" style="display:none;" title="添加衣物">＋</button>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar" id="tab-bar">
+    <button class="tab-btn active" data-tab="home">
+      <span class="tab-icon-wrap"><span class="tab-icon">🏠</span></span>首页
+    </button>
+    <button class="tab-btn" data-tab="wardrobe">
+      <span class="tab-icon-wrap"><span class="tab-icon">👗</span><span class="tab-badge" id="wardrobe-badge" style="display:none;">0</span></span>衣橱
+    </button>
+    <button class="tab-btn" data-tab="history">
+      <span class="tab-icon-wrap"><span class="tab-icon">📅</span><span class="tab-badge" id="history-badge" style="display:none;">0</span></span>历史
+    </button>
+    <button class="tab-btn" data-tab="community">
+      <span class="tab-icon-wrap"><span class="tab-icon">👥</span></span>社区
+    </button>
+    <button class="tab-btn" data-tab="profile">
+      <span class="tab-icon-wrap"><span class="tab-icon">👤</span></span>我的
+    </button>
+  </div>
+</div>
+
+<!-- Modals -->
+<div class="modal-overlay" id="modal-3d">
+  <div class="modal">
+    <div class="modal-icon">🎨</div>
+    <div class="modal-title">3D试穿体验</div>
+    <div class="modal-desc">目前3D模式生成的试穿效果可能与实物存在差异，建议作为风格参考使用。我们将持续优化3D渲染引擎，提升试穿真实度。</div>
+    <label class="modal-check">
+      <input type="checkbox" id="chk-no-3d-tip"> 下次不再提示
+    </label>
+    <button class="btn-primary" style="width:100%;" onclick="close3DModal()">我知道了</button>
+  </div>
+</div>
+
+<!-- Add Method Picker -->
+<div class="modal-overlay" id="modal-add-method">
+  <div class="modal modal-method-sheet" id="method-sheet-content"></div>
+</div>
+<!-- Generic Flow Modal (reused for category/brand/photo/ecom/manual) -->
+<div class="modal-overlay" id="modal-category">
+  <div class="modal cat-modal-body" id="cat-modal-content"></div>
+</div>
+
+<!-- Onboarding Overlay -->
+<div class="onboarding-overlay" id="onboarding-overlay">
+  <div class="onboarding-card" id="onboarding-card"></div>
+</div>
+
+<!-- Edit Post Modal -->
+<div class="modal-overlay" id="modal-edit-post">
+  <div class="modal" style="max-width:340px;width:90%;text-align:left;">
+    <div class="modal-icon">✏️</div>
+    <div class="modal-title">编辑穿搭</div>
+    
+    <input type="hidden" id="edit-post-id">
+    
+    <div style="width:100%;margin-bottom:12px;">
+      <label style="font-size:0.82rem;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;">文案描述</label>
+      <textarea id="edit-post-content" placeholder="描述你的穿搭心得..." rows="3" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);resize:none;"></textarea>
+    </div>
+    
+    <div style="width:100%;margin-bottom:16px;">
+      <label style="font-size:0.82rem;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;">方案标签</label>
+      <select id="edit-post-outfit" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);">
+        <option value="日常通勤">日常通勤</option>
+        <option value="专业干练">专业干练</option>
+        <option value="甜美约会">甜美约会</option>
+        <option value="休闲周末">休闲周末</option>
+        <option value="运动活力">运动活力</option>
+        <option value="时尚潮流">时尚潮流</option>
+      </select>
+    </div>
+    
+    <div style="display:flex;gap:10px;">
+      <button class="btn-secondary" style="flex:1;" onclick="closeEditPostModal()">取消</button>
+      <button class="btn-primary" style="flex:1;" onclick="saveEditPost()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Edit Modal -->
+<div class="modal-overlay" id="modal-profile-edit">
+  <div class="modal" style="max-width:340px;width:90%;text-align:left;">
+    <div class="modal-icon">👤</div>
+    <div class="modal-title">编辑资料</div>
+    
+    <div style="margin-bottom:12px;">
+      <label style="font-size:0.82rem;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;">头像</label>
+      <div class="photo-upload-area" id="profile-avatar-area" style="height:80px;">
+        <input type="file" id="profile-avatar-input" accept="image/*" style="display:none;">
+        <div class="photo-upload-placeholder" id="profile-avatar-placeholder">
+          <span class="upload-icon">📷</span><span class="upload-text">上传头像</span>
+        </div>
+      </div>
+    </div>
+    
+    <div style="width:100%;margin-bottom:12px;">
+      <label style="font-size:0.82rem;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;">昵称</label>
+      <input type="text" id="edit-nickname" placeholder="输入昵称..." style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);">
+    </div>
+    
+    <div style="width:100%;margin-bottom:12px;">
+      <label style="font-size:0.82rem;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;">性别</label>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-secondary" id="gender-male" onclick="selectGender('male')" style="flex:1;font-size:0.8rem;">男</button>
+        <button class="btn-secondary" id="gender-female" onclick="selectGender('female')" style="flex:1;font-size:0.8rem;">女</button>
+        <button class="btn-secondary" id="gender-secret" onclick="selectGender('secret')" style="flex:1;font-size:0.8rem;">保密</button>
+      </div>
+    </div>
+    
+    <div style="width:100%;margin-bottom:12px;">
+      <label style="font-size:0.82rem;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;">年龄</label>
+      <select id="edit-age" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);">
+        <option value="">选择年龄范围</option>
+        <option value="18-24">18-24岁</option>
+        <option value="25-30">25-30岁</option>
+        <option value="31-40">31-40岁</option>
+        <option value="41-50">41-50岁</option>
+        <option value="50+">50岁以上</option>
+      </select>
+    </div>
+    
+    <div style="width:100%;margin-bottom:16px;">
+      <label style="font-size:0.82rem;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;">个人简介</label>
+      <textarea id="edit-bio" placeholder="描述你的风格偏好..." rows="3" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);resize:none;"></textarea>
+    </div>
+    
+    <div style="display:flex;gap:10px;">
+      <button class="btn-secondary" style="flex:1;" onclick="closeProfileModal()">取消</button>
+      <button class="btn-primary" style="flex:1;" onclick="saveProfile()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Post Modal -->
+<div class="modal-overlay" id="modal-post">
+  <div class="modal" style="max-width:340px;width:90%;text-align:left;">
+    <div class="modal-icon">📸</div>
+    <div class="modal-title">发布穿搭</div>
+    <div class="modal-desc">分享你的穿搭照片和心得</div>
+    
+    <div style="margin-bottom:12px;">
+      <label style="font-size:0.82rem;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;">照片</label>
+      <div class="photo-upload-area" id="post-photo-area">
+        <input type="file" id="post-photo-input" accept="image/*" style="display:none;">
+        <div class="photo-upload-placeholder" id="post-photo-placeholder">
+          <span style="font-size:2rem;">📷</span>
+          <span style="font-size:0.78rem;color:var(--muted);">点击上传照片</span>
+        </div>
+        <img id="post-photo-preview" style="display:none;width:100%;height:auto;border-radius:12px;">
+      </div>
+    </div>
+    
+    <div style="margin-bottom:12px;">
+      <label style="font-size:0.82rem;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;">文案</label>
+      <textarea id="post-content" placeholder="说说你的穿搭心得..." style="width:100%;padding:10px 12px;border-radius:12px;border:1.5px solid var(--rule);background:var(--bg2);font-size:0.82rem;font-family:var(--font-system);color:var(--ink);resize:none;height:80px;"></textarea>
+    </div>
+    
+    <div style="margin-bottom:12px;">
+      <label style="font-size:0.82rem;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;">穿搭方案</label>
+      <select id="post-outfit" style="width:100%;padding:8px 12px;border-radius:12px;border:1.5px solid var(--rule);background:var(--bg2);font-size:0.82rem;font-family:var(--font-system);color:var(--ink);">
+        <option value="日常通勤">日常通勤</option>
+        <option value="专业干练">专业干练</option>
+        <option value="甜美约会">甜美约会</option>
+        <option value="个性酷飒">个性酷飒</option>
+        <option value="运动活力">运动活力</option>
+        <option value="闪耀派对">闪耀派对</option>
+      </select>
+    </div>
+    
+    <div style="display:flex;gap:8px;">
+      <button class="btn-secondary" onclick="closePostModal()" style="flex:1;">取消</button>
+      <button class="btn-primary" onclick="submitPost()" style="flex:1;">发布</button>
+    </div>
+  </div>
+</div>
+
+<!-- City Select Modal -->
+<div class="modal-overlay" id="modal-city">
+  <div class="modal">
+    <div class="modal-icon">📍</div>
+    <div class="modal-title">选择城市</div>
+    <div class="modal-desc">请选择或输入你所在的城市，以便为你提供天气信息和搭配建议</div>
+    <div style="width:100%;margin-bottom:12px;">
+      <input type="text" id="city-input" placeholder="输入城市名称..." style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);">
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px;">
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('北京')">北京</button>
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('上海')">上海</button>
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('广州')">广州</button>
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('深圳')">深圳</button>
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('杭州')">杭州</button>
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('成都')">成都</button>
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('重庆')">重庆</button>
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('武汉')">武汉</button>
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('南京')">南京</button>
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('苏州')">苏州</button>
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('西安')">西安</button>
+      <button class="btn-secondary" style="font-size:0.78rem;padding:6px 14px;" onclick="selectCity('天津')">天津</button>
+    </div>
+    <div class="modal-check" style="margin-bottom:16px;" onclick="autoLocate()">
+      <span>📍 自动定位当前城市</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-secondary" onclick="closeCityModal()" style="flex:1;">取消</button>
+      <button class="btn-primary" onclick="confirmCustomCity()" style="flex:1;">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- Body Info Modal -->
+<div class="modal-overlay" id="modal-body-info">
+  <div class="modal">
+    <div class="modal-icon">👤</div>
+    <div class="modal-title">体型信息</div>
+    <div class="modal-desc">填写你的体型数据，AI会据此提供更精准的搭配建议</div>
+    <div style="width:100%;margin-bottom:8px;">
+      <label style="font-size:0.75rem;color:var(--muted);margin-bottom:4px;display:block;">身高 (cm)</label>
+      <input type="number" id="body-height" placeholder="170" min="100" max="250" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);">
+    </div>
+    <div style="width:100%;margin-bottom:8px;">
+      <label style="font-size:0.75rem;color:var(--muted);margin-bottom:4px;display:block;">体重 (kg)</label>
+      <input type="number" id="body-weight" placeholder="60" min="30" max="200" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);">
+    </div>
+    <div style="width:100%;margin-bottom:8px;">
+      <label style="font-size:0.75rem;color:var(--muted);margin-bottom:4px;display:block;">肩宽 (cm)</label>
+      <input type="number" id="body-shoulder" placeholder="45" min="20" max="100" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);">
+    </div>
+    <div style="width:100%;margin-bottom:12px;">
+      <label style="font-size:0.75rem;color:var(--muted);margin-bottom:4px;display:block;">腰围 (cm)</label>
+      <input type="number" id="body-waist" placeholder="75" min="30" max="150" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);">
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+      <label class="modal-check" style="flex:1;">
+        <input type="checkbox" id="body-password-toggle"> 设置隐私密码
+      </label>
+    </div>
+    <div id="body-password-section" style="display:none;width:100%;margin-bottom:12px;">
+      <label style="font-size:0.75rem;color:var(--muted);margin-bottom:4px;display:block;">设置4位数字密码</label>
+      <input type="password" id="body-password" placeholder="****" maxlength="4" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);letter-spacing:4px;">
+      <div style="font-size:0.7rem;color:var(--muted);margin-top:4px;">🔒 保护你的隐私数据</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-secondary" onclick="closeBodyInfoModal()" style="flex:1;">取消</button>
+      <button class="btn-primary" onclick="saveBodyInfo()" style="flex:1;">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Body Info Password Modal -->
+<div class="modal-overlay" id="modal-body-password">
+  <div class="modal">
+    <div class="modal-icon">🔒</div>
+    <div class="modal-title">验证密码</div>
+    <div class="modal-desc">请输入密码以查看隐私数据</div>
+    <div style="width:100%;margin-bottom:12px;">
+      <input type="password" id="body-pwd-input" placeholder="****" maxlength="4" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--rule);font-size:0.85rem;font-family:var(--font-system);background:var(--bg2);color:var(--ink);letter-spacing:4px;text-align:center;font-size:1.2rem;">
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-secondary" onclick="closeBodyPasswordModal()" style="flex:1;">取消</button>
+      <button class="btn-primary" onclick="verifyBodyPassword()" style="flex:1;">验证</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal" style="max-width:320px;width:90%;">
+    <div class="modal-icon">⚠️</div>
+    <div class="modal-title" id="confirm-title">确认操作</div>
+    <div class="modal-desc" id="confirm-body"></div>
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button class="btn-secondary" id="confirm-cancel">取消</button>
+      <button class="btn-danger" id="confirm-ok">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
