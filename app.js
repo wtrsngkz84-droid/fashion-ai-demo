@@ -3391,6 +3391,13 @@ function init() {
   });
 
   switchTab('home');
+  
+  if (state.firstUse) {
+    state.firstUse = false;
+    setTimeout(() => {
+      appendMessage({ type: 'ai', text: '你好，主人！我是你的智能穿搭助手——小陶 👋\n\n很高兴认识你！我可以帮你：\n\n✨ 根据天气推荐穿搭\n✨ 管理你的衣橱\n✨ 搭配整套造型\n✨ 生成虚拟试穿效果\n\n请问今天想怎么搭配呢？' });
+    }, 800);
+  }
 }
 
 async function callBaiduAPI(endpoint, payload) {

@@ -381,5 +381,6 @@ const DATA = {
     collectedPosts: [],
     styleHistory: [],
     currentWeather: null,
+    firstUse: true,
   },
 };
