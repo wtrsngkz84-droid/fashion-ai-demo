@@ -1,0 +1,24 @@
+<view class="screen {{dark ? 'dark' : ''}} home">
+  <view class="dashboard">
+    <view class="row muted"><text bindtap="profile">📍 {{profile.location || '未设置'}}</text><text>天气未接入</text></view>
+    <view class="row between spaced"><text class="section-title">📋 我的计划</text><button class="small secondary" bindtap="openPlan">＋ 添加</button></view>
+    <view class="chips"><view wx:for="{{plans}}" wx:key="id" class="chip">{{item.date}} {{item.name}} <text data-id="{{item.id}}" bindtap="deletePlan">✕</text></view></view>
+    <view wx:if="{{!plans.length}}" class="muted">暂无未来计划</view>
+  </view>
+  <view class="bubble">你好！告诉我今天的场合，我会从你的可穿衣物中帮你搭配。</view>
+  <view class="chips"><button wx:for="{{occasions}}" wx:key="id" class="chip {{occasion === item.id ? 'active' : ''}}" data-id="{{item.id}}" bindtap="choose">{{item.label}}</button></view>
+  <view class="notice">当前为规则推荐；输入支持场景关键词，复杂需求解析待接入。</view>
+  <view wx:if="{{error}}" class="error">{{error}}<button class="small secondary" bindtap="generate">重试</button></view>
+  <view wx:if="{{busy}}" class="notice">正在处理…</view>
+  <view wx:if="{{result}}">
+    <view wx:for="{{result.warnings}}" wx:key="*this" class="notice">{{item}}</view>
+    <button wx:if="{{!result.outfits.length}}" class="secondary" bindtap="wardrobe">去衣橱添加衣物</button>
+    <view wx:for="{{result.outfits}}" wx:key="name" class="card outfit">
+      <view class="tag">方案 {{index + 1}} · {{item.score}} 规则分</view><view class="section-title spaced">{{item.name}}</view><view class="muted">{{item.reason}}</view>
+      <view class="actions"><button class="primary" disabled="{{busy}}" data-index="{{index}}" bindtap="save">保存穿搭</button><button class="secondary" data-index="{{index}}" data-rating="like" bindtap="feedback">♡ 喜欢</button><button class="secondary" data-index="{{index}}" data-rating="dislike" bindtap="feedback">不适合</button></view>
+      <button class="link spaced" bindtap="pending">3D试穿 · 待接入</button>
+    </view>
+  </view>
+  <view class="input-row row"><input class="grow" value="{{prompt}}" bindinput="input" bindconfirm="generate" placeholder="描述场景或需求..." maxlength="200" confirm-type="send"/><button class="primary" loading="{{busy}}" disabled="{{busy}}" bindtap="generate">📤</button></view>
+  <view wx:if="{{planOpen}}" class="overlay"><view class="modal"><view class="title">添加计划</view><picker mode="date" value="{{planDate}}" bindchange="planDate"><view class="picker">{{planDate || '选择日期'}}</view></picker><input value="{{planName}}" bindinput="planName" placeholder="日常通勤、面试、约会…" maxlength="30"/><view class="muted">计划保存在本机</view><view class="actions"><button bindtap="closePlan">取消</button><button class="primary" bindtap="savePlan">保存</button></view></view></view>
+</view>

@@ -1,0 +1,19 @@
+services:
+  api:
+    build: ../backend
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      APP_MODE: local
+      DATABASE_PATH: /app/data/fashion.sqlite3
+      DEMO_API_TOKEN: ${DEMO_API_TOKEN:?Set DEMO_API_TOKEN in the environment}
+    volumes:
+      - fashion-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+volumes:
+  fashion-data:

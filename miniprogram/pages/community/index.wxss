@@ -1,0 +1,1 @@
+.avatar{background:var(--accent-light);width:72rpx;height:72rpx;border-radius:50%;text-align:center;line-height:72rpx;font-size:40rpx;}.content{line-height:1.7;}

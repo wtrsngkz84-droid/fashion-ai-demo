@@ -1,0 +1,5 @@
+<view class="tab-bar {{dark ? 'dark' : ''}}">
+  <view wx:for="{{tabs}}" wx:key="page" class="tab {{selected === index ? 'active' : ''}}" data-index="{{index}}" bindtap="switchTab" role="button" aria-label="{{item.text}}">
+    <text class="icon">{{item.icon}}</text><text>{{item.text}}</text>
+  </view>
+</view>
