@@ -1,0 +1,15 @@
+{
+  "pages": ["pages/home/index", "pages/wardrobe/index", "pages/history/index", "pages/community/index", "pages/profile/index"],
+  "window": {"navigationBarTitleText": "AI穿搭助手", "navigationBarBackgroundColor": "#FDF8F6", "navigationBarTextStyle": "black", "backgroundColor": "#FDF8F6"},
+  "tabBar": {
+    "custom": true, "color": "#8A8690", "selectedColor": "#C2705A", "backgroundColor": "#FFFFFF",
+    "list": [
+      {"pagePath": "pages/home/index", "text": "首页"},
+      {"pagePath": "pages/wardrobe/index", "text": "衣橱"},
+      {"pagePath": "pages/history/index", "text": "历史"},
+      {"pagePath": "pages/community/index", "text": "社区"},
+      {"pagePath": "pages/profile/index", "text": "我的"}
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}
