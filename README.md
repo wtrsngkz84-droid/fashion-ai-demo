@@ -37,5 +37,6 @@ cd backend
 - [开源借鉴与模型许可边界](docs/OPEN_SOURCE.md)
 - [本地、ECS 部署及微信发布待验证项](docs/DEPLOYMENT.md)
 - [实际测试记录与后续验收](docs/VALIDATION.md)
+- [微信编译检查与模拟器验收进度](docs/WECHAT_ACCEPTANCE.md)
 
 当前真实能力：衣物增删/状态更新、规则推荐、历史快照、反馈持久化、OpenCV 图片处理。YOLO 仅提供可选适配器；未下载或验证模型权重。LLM 仅定义提供者接口与校验/降级路径，没有接入线上模型。社区是本机草稿，不是线上社区。
